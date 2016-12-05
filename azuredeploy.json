@@ -101,7 +101,7 @@
       }
     },
     {
-      "apiVersion": "2014-06-01",
+      "apiVersion": "2015-08-01",
       "name": "[parameters('siteName')]",
       "type": "Microsoft.Web/Sites",
       "location": "[parameters('siteLocation')]",
@@ -117,22 +117,19 @@
       },
       "resources": [
         {
-          "apiVersion": "2014-04-01",
-          "type": "config",
-          "name": "web",
-          "dependsOn": [
-            "[concat('Microsoft.Web/Sites/', parameters('siteName'))]"
-          ],
-          "properties": {
-            "connectionStrings": [
-              {
-                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';')]",
-                "Name": "MovieDBContext",
-                "Type": 2
-              }
-            ]
-          }
-        },
+      "apiVersion": "2015-08-01",
+      "type": "config",
+      "name": "connectionstrings",
+      "dependsOn": [
+        "[concat('Microsoft.Web/Sites/', parameters('siteName'))]"
+      ],
+      "properties": {
+        "DefaultConnection": {
+          "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlserverName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('databaseName'), ';User Id=', parameters('administratorLogin'), '@', variables('sqlserverName'), ';Password=', parameters('administratorLoginPassword'), ';')]",
+          "type": "SQLServer"
+        }
+      }
+    }
       ]
     }
   ]
